@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Juego 3 en Raya</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+  <style>
+    #tablero td {
+      width: 60px;
+      height: 60px;
+      border: 1px solid #aaa;
+      position: relative;
+    }
+
+    #tablero {
+      border-collapse: collapse;
+      margin-left: 20px;
+    }
+
+    .imagen-jugador {
+      width: 60px;
+      height: 60px;
+      position: absolute;
+      pointer-events: none;
+      transition: left 0.1s, top 0.1s;
+      z-index: 100;
+    }
+
+    .panel-jugador {
+      position: relative;
+      width: 60px;
+      height: 60px;
+    }
+
+    #ganador {
+      font-size: 24px;
+      font-weight: bold;
+      color: green;
+    }
+  </style>
+</head>
+<body onload="inicializar()">
+<div class="container-fluid mt-3">
+  <div class="row">
+    <!-- Panel de controles -->
+    <div class="col-md-3 bg-light p-3">
+      <h2 class="text-center text-primary">Instrucciones</h2>
+      <p>- Selecciona las dimensiones del tablero (2 a 10).</p>
+      <p>- Da clic en “Iniciar juego”.</p>
+      <p>- Cada jugador mueve su imagen dando clic sobre ella, luego elige su celda.</p>
+      <p>- El primero en alinear tres imágenes iguales gana.</p>
+
+      <div class="d-flex align-items-center mb-3">
+        <label for="filas" class="form-label mb-0 me-2">Filas:</label>
+        <select id="filas" class="form-select w-auto me-4"></select>
+
+        <label for="columnas" class="form-label mb-0 me-2">Columnas:</label>
+        <select id="columnas" class="form-select w-auto"></select>
+      </div>
+
+      <button class="btn btn-primary" onclick="iniciarJuego()">Iniciar juego</button>
+
+      <div id="ganador" class="mt-4 text-center"></div>
+      <div id="jugador-turno" class="mt-4 text-center"></div>
+    </div>
+
+    <!-- Imagen del siguiente turno -->
+    <div class="col-md-1 d-flex align-items-start justify-content-center pt-4">
+      <div class="panel-jugador">
+        <img id="imagenJugador" src="img/estrella.png" class="imagen-jugador">
+      </div>
+    </div>
+
+    <!-- Tablero -->
+    <div class="col-md-8">
+      <table id="tablero"></table>
+    </div>
+  </div>
+</div>
+
+<script>
+  let turno = 1; // 1 = estrella, 2 = saturno
+  let arrastrando = false;
+  let ultimaCelda = null;
+  let tableroArray = [];
+  let filas = 0, columnas = 0;
+
+  function inicializar() {
+    for (let i = 2; i <= 10; i++) {
+      $('#filas').append(`<option value="${i}">${i}</option>`);
+      $('#columnas').append(`<option value="${i}">${i}</option>`);
+    }
+  }
+
+  function iniciarJuego() {
+    filas = parseInt($('#filas').val());
+    columnas = parseInt($('#columnas').val());
+    $('#tablero').empty();
+    tableroArray = Array(filas).fill().map(() => Array(columnas).fill(0));
+
+    for (let i = 0; i < filas; i++) {
+      let fila = "<tr>";
+      for (let j = 0; j < columnas; j++) {
+        fila += `<td data-x="${j}" data-y="${i}"></td>`;
+      }
+      fila += "</tr>";
+      $('#tablero').append(fila);
+    }
+
+    // Posicionar imagen inicial fuera del tablero
+    posicionarImagenTurno();
+    $('#ganador').text('');
+    $('#jugador-turno').text("Turno del jugador: " + (turno === 1 ? "Estrella" : "Saturno"));
+
+    // Evento global click para activar/desactivar arrastre
+    $(document).off("click").on("click", function () {
+      arrastrando = !arrastrando;
+      if (!arrastrando && ultimaCelda) {
+        colocarImagen(ultimaCelda);
+        cambiarTurno();
+      }
+    });
+
+    // Evento mouseover sobre celdas
+    $('#tablero td').off("mouseenter").on("mouseenter", function () {
+      if (arrastrando) {
+        ultimaCelda = $(this);
+        let offset = $(this).offset();
+        $('#imagenJugador').css({ left: offset.left + 'px', top: offset.top + 'px' });
+      }
+    });
+  }
+
+  function posicionarImagenTurno() {
+    let panel = $(".panel-jugador").offset();
+    $('#imagenJugador')
+      .attr('src', turno === 1 ? 'img/estrella.png' : 'img/saturno.png')
+      .css({ left: panel.left + 'px', top: panel.top + 'px' });
+  }
+
+  function colocarImagen(celda) {
+    const x = parseInt(celda.data('x'));
+    const y = parseInt(celda.data('y'));
+    if (tableroArray[y][x] !== 0) return;
+
+    tableroArray[y][x] = turno;
+    celda.append(`<img src="img/${turno === 1 ? 'estrella' : 'saturno'}.png" width="60" height="60">`);
+
+    if (verificarGanador(x, y)) {
+      $('#ganador').html('<img src="img/Festejo.png" width="100"> <br>¡Ganaste!');
+      $(document).off("click"); // Detener juego
+    }
+  }
+
+  function cambiarTurno() {
+    turno = turno === 1 ? 2 : 1;
+    posicionarImagenTurno();
+    $('#jugador-turno').text("Turno del jugador: " + (turno === 1 ? "Estrella" : "Saturno"));
+  }
+
+  function verificarGanador(x, y) {
+    const jugador = tableroArray[y][x];
+    const direcciones = [
+      [[0,1], [0,-1]], // horizontal
+      [[1,0], [-1,0]], // vertical
+      [[1,1], [-1,-1]], // diagonal principal
+      [[1,-1], [-1,1]]  // diagonal secundaria
+    ];
+
+    for (const dir of direcciones) {
+      let count = 1;
+      for (const [dy, dx] of dir) {
+        let nx = x + dx;
+        let ny = y + dy;
+        while (ny >= 0 && ny < filas && nx >= 0 && nx < columnas && tableroArray[ny][nx] === jugador) {
+          count++;
+          nx += dx;
+          ny += dy;
+        }
+      }
+      if (count >= 3) return true;
+    }
+    return false;
+  }
+</script>
+</body>
+</html>
