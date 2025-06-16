@@ -1,0 +1,23 @@
+ Iniciar el servidor
+    docker-compose up -d
+
+Probar que funciona
+    http://localhost:8000/
+
+Usa estos datos para iniciar sesión:
+
+Servidor: db o localhost
+
+Usuario: root o demo_user
+
+Contraseña: rootpassword o demo_pass
+
+Si puedes entrar y ver la base de datos demo_db, ¡todo está funcionando!
+
+
+Para detenerlo
+docker-compose down
+
+Desde el telefono:  http://10.74.61.138:8000
+
+Repositorio: https://github.com/Lesslibls/Aplicaciones_De_Internet.git
