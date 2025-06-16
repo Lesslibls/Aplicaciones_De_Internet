@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        // Datos de países y estados
+        const estadosPorPais = {
+            "EEUU": ["California", "Texas", "Florida", "Nueva York"],
+            "Mexico": ["Jalisco", "CDMX", "Nuevo León", "Yucatán"]
+        };
+
+        // Función para actualizar los estados dependiendo del país seleccionado
+        function seleccionado() {
+            var paisSeleccionado = $("#paises").val(); // Valor seleccionado del país
+            var estados = estadosPorPais[paisSeleccionado] || [];
+
+            // Limpiar y actualizar el selector de estados
+            $("#estados").empty(); // Limpia las opciones anteriores
+
+            if (estados.length > 0) {
+                estados.forEach(function(estado) {
+                    $("#estados").append(new Option(estado, estado));
+                });
+            } else {
+                $("#estados").append(new Option("Selecciona un estado", ""));
+            }
+        }
+
+        $(document).ready(function(){
+            seleccionado(); // Cargar los estados al iniciar
+        });
+    </script>
+</head>
+<body id="contenedor">
+
+    <select name="Paises" id="paises" onchange="seleccionado()">
+        <option value="">Selecciona un país</option>
+        <option value="EEUU">Estados Unidos</option>
+        <option value="Mexico">México</option>
+    </select>
+
+    <select name="estados" id="estados">
+        <option value="">Selecciona un estado</option>
+    </select>
+
+</body>
+</html>

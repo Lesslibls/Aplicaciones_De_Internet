@@ -1,0 +1,66 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Botón Escurridizp MouseEnter</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        /* Estilos para el contenedor */
+        #contenedor {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #ffe5e6, #fac4f3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* Estilos para el botón */
+        #move_button {
+            position: absolute;
+            padding: 15px 30px;
+            font-size: 18px;
+            font-weight: bold;
+            color: white;
+            background: linear-gradient(45deg, #f82fff, #ee80f1);
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            box-shadow: 0 0 15px rgba(196, 47, 255, 0.8);
+            transition: transform 0.2s ease-in-out;
+        }
+
+        /* Efecto cuando el usuario intenta presionar */
+        #move_button:hover {
+            transform: scale(1.1);
+        }
+    </style>
+    <script>
+        $(document).ready(function () {
+            $("#move_button").mouseenter(function () {
+                // Obtener dimensiones del contenedor y del botón
+                var container = $("#contenedor");
+                var button = $(this);
+
+                var maxX = container.width() - button.outerWidth();
+                var maxY = container.height() - button.outerHeight();
+
+                // Generar nuevas coordenadas aleatorias dentro del contenedor
+                var newX = Math.floor(Math.random() * maxX);
+                var newY = Math.floor(Math.random() * maxY);
+
+                // Mover el botón a la nueva posición
+                button.css({ left: newX + "px", top: newY + "px" });
+            });
+        });
+    </script>
+</head>
+<body>
+    <div id="contenedor">
+        <button id="move_button" style="left: 50%; top: 50%;">¡Atrápame si puedes!</button>
+    </div>
+</body>
+</html>

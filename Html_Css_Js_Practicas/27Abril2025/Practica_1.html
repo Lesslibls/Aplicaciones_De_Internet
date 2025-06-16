@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Generar Matriz de Selects</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+      position: relative;
+    }
+
+    label, input, button {
+      margin: 5px;
+    }
+
+    #contenedor {
+      position: relative;
+      margin-top: 20px;
+      border: 1px dashed #999;
+      min-height: 300px;
+    }
+
+    select {
+      position: absolute;
+      width: 60px;
+    }
+  </style>
+</head>
+<body>
+  <h2>Práctica 1: Generar matriz de selects</h2>
+  <label for="inputX">Columnas (x):</label>
+  <input type="number" id="inputX" min="1">
+  <label for="inputY">Filas (y):</label>
+  <input type="number" id="inputY" min="1">
+  <button onclick="generarMatriz()">Generar</button>
+
+  <div id="contenedor"></div>
+
+  <script>
+    function generarMatriz() {
+      const x = parseInt(document.getElementById("inputX").value);
+      const y = parseInt(document.getElementById("inputY").value);
+      const contenedor = document.getElementById("contenedor");
+      contenedor.innerHTML = ""; // limpiar antes de generar
+
+      const espacio = 70; // espacio entre selects
+
+      for (let fila = 0; fila < y; fila++) {
+        for (let col = 0; col < x; col++) {
+          const select = document.createElement("select");
+          const producto = fila * col;
+
+          for (let i = 0; i <= producto; i++) {
+            const opcion = document.createElement("option");
+            opcion.value = i;
+            opcion.textContent = i;
+            select.appendChild(opcion);
+          }
+
+          // Posicionar de forma absoluta
+          select.style.left = `${col * espacio}px`;
+          select.style.top = `${fila * espacio}px`;
+
+          contenedor.appendChild(select);
+        }
+      }
+    }
+  </script>
+</body>
+</html>

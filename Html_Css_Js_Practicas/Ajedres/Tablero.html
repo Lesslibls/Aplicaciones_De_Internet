@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tablero de Ajedrez</title>
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            height: 100vh;
+            margin: 0;
+            background: #f9f9f9;
+            color: rgb(75, 46, 3);
+            user-select: none;
+        }
+
+        .titulo {
+            font-size: 35px;
+            font-weight: bold;
+            margin: 20px 0 10px;
+        }
+
+        .tablero {
+            position: relative;
+            width: 80vmin;
+            height: 80vmin;
+            display: flex;
+            flex-wrap: wrap;
+            border: 10px double rgb(75, 46, 3);
+        }
+
+        .casilla {
+            width: 12.5%;
+            height: 12.5%;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .blanco {
+            background-color: rgb(253, 244, 157);
+        }
+
+        .negro {
+            background-color: rgb(124, 61, 3);
+        }
+
+        .pieza {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            cursor: grab;
+        }
+
+        #marcador {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+
+        button {
+            margin: 10px;
+            padding: 8px 20px;
+            font-size: 16px;
+            background: rgb(187, 144, 81);
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="titulo">Tablero de Ajedrez</div>
+    <button onclick="iniciarJuego()">Iniciar juego</button>
+    <div id="marcador">Jugador 1: 0 | Jugador 2: 0</div>
+    <div class="tablero" id="tablero"></div>
+
+    <script>
+        const tablero = document.getElementById("tablero");
+        let marcador = { j1: 0, j2: 0 };
+        let piezaSeleccionada = null;
+
+        function getCasilla(fila, col) {
+            return document.querySelector(`.casilla[data-fila='${fila}'][data-col='${col}']`);
+        }
+
+        for (let fila = 0; fila < 8; fila++) {
+            for (let col = 0; col < 8; col++) {
+                const casilla = document.createElement("div");
+                casilla.classList.add("casilla", (fila + col) % 2 === 0 ? "blanco" : "negro");
+                casilla.dataset.fila = fila;
+                casilla.dataset.col = col;
+                casilla.addEventListener("click", soltarPieza);
+                tablero.appendChild(casilla);
+            }
+        }
+
+        function iniciarJuego() {
+            document.querySelectorAll(".pieza").forEach(p => p.remove());
+            colocarPiezasIniciales();
+            marcador = { j1: 0, j2: 0 };
+            actualizarMarcador();
+        }
+
+        function colocarPieza(src, fila, col, jugador) {
+            const pieza = document.createElement("img");
+            pieza.src = `./img/${src}`;
+            pieza.className = "pieza";
+            pieza.dataset.jugador = jugador;
+            pieza.dataset.tipo = src.replace(/\d\.png$/, "").toLowerCase();
+            pieza.addEventListener("click", seleccionarPieza);
+
+            const casilla = getCasilla(fila, col);
+            casilla.appendChild(pieza);
+        }
+
+        function colocarPiezasIniciales() {
+            const piezas = ["Torre", "Caballo", "Alfil", "Dama", "Rey", "Alfil", "Caballo", "Torre"];
+            for (let i = 0; i < 8; i++) {
+                colocarPieza(`${piezas[i]}1.png`, 0, i, 1);
+                colocarPieza(`Peon1.png`, 1, i, 1);
+                colocarPieza(`Peon2.png`, 6, i, 2);
+                colocarPieza(`${piezas[i]}2.png`, 7, i, 2);
+            }
+        }
+
+        function seleccionarPieza(e) {
+            e.stopPropagation();
+            piezaSeleccionada = e.target;
+        }
+
+        function soltarPieza(e) {
+            if (piezaSeleccionada) {
+                const destino = e.currentTarget;
+                if (destino.contains(piezaSeleccionada)) return;
+
+                destino.innerHTML = "";
+                destino.appendChild(piezaSeleccionada);
+                piezaSeleccionada = null;
+            }
+        }
+
+        function actualizarMarcador() {
+            document.getElementById("marcador").textContent = `Jugador 1: ${marcador.j1} | Jugador 2: ${marcador.j2}`;
+        }
+    </script>
+</body>
+</html>

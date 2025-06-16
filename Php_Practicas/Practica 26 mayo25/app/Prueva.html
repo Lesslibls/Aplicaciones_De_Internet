@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Casa Inteligente</title>
+    <style>
+        .foco-container {
+            display: inline-block;
+            text-align: center;
+            margin: 10px;
+        }
+
+        .foco {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            cursor: pointer;
+            margin-bottom: 10px;
+            line-height: 100px;
+            font-weight: bold;
+            color: black;
+            border: 2px solid #333;
+        }
+
+        .on  { background-color: yellow; }
+        .off { background-color: gray; }
+
+        .estado {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Control de Casa Inteligente</h1>
+    <div id="focos">
+        <div class="foco-container">
+            <div class="foco off" id="foco1" onclick="cambiarEstado('foco1')">1</div>
+            <div class="estado" id="estado-foco1">Foco 1 apagado</div>
+        </div>
+
+        <div class="foco-container">
+            <div class="foco off" id="foco2" onclick="cambiarEstado('foco2')">2</div>
+            <div class="estado" id="estado-foco2">Foco 2 apagado</div>
+        </div>
+
+        <div class="foco-container">
+            <div class="foco off" id="foco3" onclick="cambiarEstado('foco3')">3</div>
+            <div class="estado" id="estado-foco3">Foco 3 apagado</div>
+        </div>
+
+        <div class="foco-container">
+            <div class="foco off" id="foco4" onclick="cambiarEstado('foco4')">4</div>
+            <div class="estado" id="estado-foco4">Foco 4 apagado</div>
+        </div>
+    </div>
+
+    <script>
+        function actualizarEstados() {
+            fetch('obtener_estado.php')
+                .then(response => response.json())
+                .then(estados => {
+                    for (let id in estados) {
+                        const estado = estados[id];
+                        const div = document.getElementById(id);
+                        const estadoDiv = document.getElementById('estado-' + id);
+
+                        div.className = 'foco ' + estado;
+
+                        // Mostrar mensaje según estado
+                        const num = id.replace('foco', '');
+                        if (estado === 'on') {
+                            estadoDiv.textContent = `Foco ${num} encendido`;
+                        } else {
+                            estadoDiv.textContent = `Foco ${num} apagado`;
+                        }
+                    }
+                });
+        }
+
+        function cambiarEstado(focoId) {
+            fetch('cambiar_estado.php?foco=' + focoId)
+                .then(response => response.text())
+                .then(nuevoEstado => {
+                    const div = document.getElementById(focoId);
+                    const estadoDiv = document.getElementById('estado-' + focoId);
+
+                    div.className = 'foco ' + nuevoEstado.trim();
+
+                    // Mostrar mensaje según nuevo estado
+                    const num = focoId.replace('foco', '');
+                    if (nuevoEstado.trim() === 'on') {
+                        estadoDiv.textContent = `Foco ${num} encendido`;
+                    } else {
+                        estadoDiv.textContent = `Foco ${num} apagado`;
+                    }
+                });
+        }
+
+        // Actualizar cada segundo
+        setInterval(actualizarEstados, 1000);
+        window.onload = actualizarEstados;
+    </script>
+</body>
+</html>

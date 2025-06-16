@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color dinámico con mousemove</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            display: flex;
+        }
+        .mitad {
+            width: 50%;
+            height: 100%;
+            transition: background 0.2s;
+        }
+        .blanca { background: white; }
+        .negra { background: black; }
+    </style>
+</head>
+<body>
+    <div class="mitad blanca" id="left"></div>
+    <div class="mitad negra" id="right"></div>
+
+    <script>
+        document.addEventListener("mousemove", (event) => {
+            const anchoPantalla = window.innerWidth;
+            const mitadPantalla = anchoPantalla / 2;
+            const x = event.clientX;
+
+            const color = Math.round((x / anchoPantalla) * 255);
+            document.body.style.backgroundColor = `rgb(${color}, ${color}, ${color})`;
+
+            if (x < mitadPantalla) {
+                document.getElementById("left").style.backgroundColor = "black";
+                document.getElementById("right").style.backgroundColor = "black";
+            } else {
+                document.getElementById("right").style.backgroundColor = "white";
+                document.getElementById("left").style.backgroundColor = "white";
+            }
+        });
+    </script>
+</body>
+</html>

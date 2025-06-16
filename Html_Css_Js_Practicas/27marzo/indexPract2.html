@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Multiplicador Mágico ⭐</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            text-align: center;
+            background-color: #f8f9fa;
+            padding: 20px;
+        }
+
+        h2 {
+            font-size: 24px;
+            color: #333;
+            margin-bottom: 20px;
+        }
+
+        .container {
+            display: inline-block;
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        select {
+            padding: 10px;
+            font-size: 18px;
+            border-radius: 5px;
+            border: 2px solid #007bff;
+            cursor: pointer;
+            margin: 10px;
+            transition: 0.3s;
+            background: white;
+        }
+
+        select:hover {
+            border-color: #0056b3;
+        }
+
+        .result {
+            font-size: 24px;
+            font-weight: bold;
+            color: #ff9800;
+            margin-top: 20px;
+        }
+
+        .stars {
+            font-size: 30px;
+            color: gold;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+
+    <h2>⭐ Multiplicador Mágico ⭐</h2>
+
+    <div class="container">
+        <label>Elige un número: </label>
+        <select id="num1"></select>
+
+        <label>Elige otro número: </label>
+        <select id="num2"></select>
+
+        <label>Resultado: </label>
+        <select id="resultado" disabled></select>
+
+        <div class="result">✨ Resultado: <span id="product">?</span> ✨</div>
+        <div class="stars" id="stars"></div>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            // Generar opciones de 1 a 10 para los selects
+            for (let i = 1; i <= 10; i++) {
+                $("#num1, #num2, #resultado").append(`<option value="${i}">${i}</option>`);
+            }
+
+            function calcularProducto() {
+                let val1 = parseInt($("#num1").val());
+                let val2 = parseInt($("#num2").val());
+                let producto = val1 * val2;
+
+                $("#resultado").val(producto);
+                $("#product").text(producto);
+
+                // Generar estrellas según el resultado
+                let estrellas = "⭐".repeat(Math.min(producto, 10)); 
+                $("#stars").html(estrellas);
+            }
+
+            // Detectar cambios en los selects
+            $("#num1, #num2").change(calcularProducto);
+        });
+    </script>
+
+</body>
+</html>

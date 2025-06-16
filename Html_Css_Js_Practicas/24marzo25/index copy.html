@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            var coord = 0;
+            
+            function scrooll_fn() {
+                if (coord > 450) {
+                    coord = 0;
+                } else {
+                    coord++;
+                }
+
+                console.log(coord);
+                $("#move_button").css("top", coord + 'px');
+            }
+
+            // Agregar el evento onmousemove al body
+            $("body").on("mousemove", scrooll_fn);
+        });
+    </script>
+</head>
+<body>
+    <div id="contenedor" style="width: 100%; height: 100vh; background-color: rgb(218, 179, 241); position: absolute;">
+        <button id="move_button" style="position: absolute; left: 100px; top: 0px;">Esto es un botón</button>
+    </div>
+</body>
+</html>

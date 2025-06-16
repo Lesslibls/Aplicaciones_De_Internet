@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dibujo con Clics</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        /* Estilos para el contenedor */
+        #contenedor {
+            width: 100%;
+            height: 100vh;
+            background: linear-gradient(135deg, #f5d2fa, #cfdef3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Estilos para los puntos */
+        .punto {
+            width: 10px;
+            height: 10px;
+            background-color: rgb(255, 0, 255);
+            border-radius: 50%;
+            position: absolute;
+            transform: translate(-50%, -50%);
+            box-shadow: 0 0 8px rgba(204, 0, 255, 0.8);
+        }
+
+        /* Estilos para el canvas */
+        #canvas {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Estilos para la tabla */
+        #tabla-coordenadas {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+            border-collapse: collapse;
+        }
+
+        #tabla-coordenadas th, #tabla-coordenadas td {
+            padding: 8px;
+            text-align: center;
+            border: 1px solid #ccc;
+        }
+
+        #tabla-coordenadas th {
+            background: #fa40d2;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div id="contenedor">
+        <canvas id="canvas"></canvas>
+        <table id="tabla-coordenadas">
+            <thead>
+                <tr>
+                    <th>#</th>
+                    <th>X</th>
+                    <th>Y</th>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+    </div>
+
+    <script>
+        $(document).ready(function () {
+            var canvas = document.getElementById("canvas");
+            var ctx = canvas.getContext("2d");
+            var prevX = null, prevY = null;
+            var clickCount = 0;
+
+            // Ajustar el tamaño del canvas
+            function resizeCanvas() {
+                canvas.width = $("#contenedor").width();
+                canvas.height = $("#contenedor").height();
+            }
+            resizeCanvas();
+            $(window).resize(resizeCanvas);
+
+            $("#contenedor").click(function (event) {
+                var x = event.pageX;
+                var y = event.pageY;
+
+                // Dibujar un punto en la posición clicada
+                var punto = $("<div class='punto'></div>").css({ top: y, left: x });
+                $("#contenedor").append(punto);
+
+                // Dibujar una línea si hay un punto previo
+                if (prevX !== null && prevY !== null) {
+                    ctx.beginPath();
+                    ctx.moveTo(prevX, prevY);
+                    ctx.lineTo(x, y);
+                    ctx.strokeStyle = "red";
+                    ctx.lineWidth = 2;
+                    ctx.stroke();
+                }
+
+                // Guardar las coordenadas actuales como las anteriores
+                prevX = x;
+                prevY = y;
+
+                // Agregar coordenadas a la tabla
+                clickCount++;
+                $("#tabla-coordenadas tbody").append(
+                    `<tr><td>${clickCount}</td><td>${x}</td><td>${y}</td></tr>`
+                );
+            });
+        });
+    </script>
+</body>
+</html>

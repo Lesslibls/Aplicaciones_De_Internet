@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <style>
+        body {
+            height: 2000px; /* Altura suficiente para hacer scroll */
+            background-color: #fafafa;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        #contenedor {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        /* Estilo para los botones */
+        .boton {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            color: #fff;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        /* Estilo para las tarjetas */
+        .tarjeta {
+            padding: 16px;
+            border-radius: 12px;
+            color: #333;
+            box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.2);
+            transition: transform 0.2s ease;
+        }
+
+        /* Colores pastel */
+        .pastel-1 { background-color: #ffadad; }
+        .pastel-2 { background-color: #ffd6a5; }
+        .pastel-3 { background-color: #fdffb6; }
+        .pastel-4 { background-color: #caffbf; }
+        .pastel-5 { background-color: #9bf6ff; }
+        .pastel-6 { background-color: #a0c4ff; }
+        .pastel-7 { background-color: #bdb2ff; }
+
+        /* Animación al pasar el mouse */
+        .boton:hover, .tarjeta:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+
+<div id="contenedor"></div>
+
+<script>
+    let ultimoScroll = 0;
+    let contador = 0;
+    const coloresPastel = [
+        'pastel-1', 'pastel-2', 'pastel-3', 
+        'pastel-4', 'pastel-5', 'pastel-6', 'pastel-7'
+    ];
+
+    $(window).on('scroll', function () {
+        let scrollActual = $(this).scrollTop();
+
+        if (scrollActual > ultimoScroll) {
+            // Desplazamiento hacia abajo → Crear botón o tarjeta
+            crearElemento();
+        } else {
+            // Desplazamiento hacia arriba → Eliminar último elemento
+            eliminarElemento();
+        }
+
+        ultimoScroll = scrollActual;
+    });
+
+    // Función para crear botones o tarjetas
+    function crearElemento() {
+        if (contador < coloresPastel.length) {
+            if (contador < 5) {
+                // Crear botón
+                let boton = $('<button>')
+                    .addClass('boton')
+                    .addClass(coloresPastel[contador])
+                    .text(`Botón ${contador + 1}`)
+                    .on('click', () => alert(`¡Haz clic en Botón ${contador + 1}!`));
+                
+                $('#contenedor').append(boton);
+            } else {
+                // Crear tarjeta
+                let tarjeta = $('<div>')
+                    .addClass('tarjeta')
+                    .addClass(coloresPastel[contador])
+                    .html(`
+                        <h3>Tarjeta ${contador - 4}</h3>
+                        <p>Contenido adicional de la tarjeta ${contador - 4}.</p>
+                    `);
+
+                $('#contenedor').append(tarjeta);
+            }
+            contador++;
+        }
+    }
+
+    // Función para eliminar el último botón o tarjeta
+    function eliminarElemento() {
+        if (contador > 0) {
+            $('#contenedor').children().last().remove(); // Eliminar el último elemento (botón o tarjeta)
+            contador--;
+        }
+    }
+</script>
+
+</body>
+</html>

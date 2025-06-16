@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Multiplicador con Selectores</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 20px;
+    }
+    label {
+      display: inline-block;
+      width: 100px;
+    }
+    select, button {
+      margin: 10px;
+      padding: 5px;
+    }
+    #resultadoTexto {
+      margin-top: 20px;
+      font-weight: bold;
+      color: darkgreen;
+    }
+  </style>
+</head>
+<body>
+  <h2>Selector de multiplicación</h2>
+
+  <label for="s1">Selector S1:</label>
+  <select id="s1" onchange="calcular()"></select>
+
+  <label for="s2">Selector S2:</label>
+  <select id="s2" onchange="calcular()"></select>
+
+  <br>
+
+  <label for="resultado">S1 x S2:</label>
+  <select id="resultado"></select>
+
+  <br>
+
+  <button onclick="mostrarProducto()">Mostrar producto</button>
+
+  <div id="resultadoTexto"></div>
+
+  <script>
+    // Llenar los selectores s1 y s2 con opciones del 1 al 10
+    for (let i = 1; i <= 10; i++) {
+      let opt1 = document.createElement("option");
+      opt1.value = i;
+      opt1.textContent = i;
+      document.getElementById("s1").appendChild(opt1);
+
+      let opt2 = document.createElement("option");
+      opt2.value = i;
+      opt2.textContent = i;
+      document.getElementById("s2").appendChild(opt2);
+    }
+
+    // Función que llena el tercer selector con números del 1 al producto
+    function calcular() {
+      const s1 = parseInt(document.getElementById("s1").value);
+      const s2 = parseInt(document.getElementById("s2").value);
+      const resultado = document.getElementById("resultado");
+
+      const producto = s1 * s2;
+      resultado.innerHTML = "";
+
+      for (let i = 1; i <= producto; i++) {
+        let opt = document.createElement("option");
+        opt.value = i;
+        opt.textContent = i;
+        resultado.appendChild(opt);
+      }
+    }
+
+    // Función para mostrar el producto en texto
+    function mostrarProducto() {
+      const s1 = parseInt(document.getElementById("s1").value);
+      const s2 = parseInt(document.getElementById("s2").value);
+      const producto = s1 * s2;
+
+      document.getElementById("resultadoTexto").textContent = `El producto de ${s1} × ${s2} es ${producto}`;
+    }
+
+    // Llenar opciones al cargar la página
+    calcular();
+  </script>
+</body>
+</html>

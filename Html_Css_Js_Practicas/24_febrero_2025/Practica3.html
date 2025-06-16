@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Gradiente con movimiento del mouse</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      transition: background-color 0.1s linear;
+    }
+  </style>
+</head>
+<body>
+  <script>
+    document.addEventListener("mousemove", (event) => {
+      const ancho = window.innerWidth;
+      const alto = window.innerHeight;
+
+      // offsetX/Y no están disponibles en document directamente,
+      // así que usamos clientX/Y y los normalizamos con el tamaño de la ventana
+      const red = Math.min(255, Math.round((event.clientX / ancho) * 255));
+      const green = Math.min(255, Math.round((event.clientY / alto) * 255));
+      const blue = 100; // Azul fijo
+
+      const colorRGB = `rgb(${red}, ${green}, ${blue})`;
+      document.body.style.backgroundColor = colorRGB;
+    });
+  </script>
+</body>
+</html>

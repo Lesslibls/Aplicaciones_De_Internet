@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <title>Casa Inteligente - Focos</title>
+  <style>
+    .foco {
+      width: 100px;
+      margin: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h2>Control de Focos</h2>
+  <div>
+    <img id="foco1" src="focoA.png" class="foco" onclick="cambiarEstado(1)">
+    <img id="foco2" src="focoA.png" class="foco" onclick="cambiarEstado(2)">
+    <img id="foco3" src="focoA.png" class="foco" onclick="cambiarEstado(3)">
+    <img id="foco4" src="focoA.png" class="foco" onclick="cambiarEstado(4)">
+  </div>
+
+  <script>
+    function cambiarEstado(id) {
+      fetch(`estado.php?foco=${id}`);
+    }
+
+    function actualizar() {
+      for (let i = 1; i <= 4; i++) {
+        fetch(`leer.php?foco=${i}`)
+          .then(res => res.text())
+          .then(estado => {
+            const img = document.getElementById(`foco${i}`);
+            img.src = estado.trim() === "1" ? "focoE.png" : "focoA.png";
+          });
+      }
+    }
+
+    setInterval(actualizar, 1000);
+    actualizar(); // Primera carga
+  </script>
+</body>
+</html>

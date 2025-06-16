@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arrastrar y Escalar</title>
+    <style>
+        #arrastrar {
+            width: 100px;
+            height: 100px;
+            background-color: aquamarine;
+            position: absolute;
+            top: 50px;
+            left: 50px;
+            cursor: grab;
+        }
+    </style>
+</head>
+<body>
+    <div id="arrastrar"></div>
+    <script>
+        let arrastrando = false;
+        let prevX = 0, prevY = 0;
+        let cuadro = document.getElementById("arrastrar");
+        
+        cuadro.addEventListener("mousedown", (e) => {
+            arrastrando = true;
+            prevX = e.offsetX;
+            prevY = e.offsetY;
+            cuadro.style.cursor = "grabbing";
+        });
+        
+        document.addEventListener("mousemove", (e) => {
+            if (arrastrando) {
+                cuadro.style.left = `${e.pageX - prevX}px`;
+                cuadro.style.top = `${e.pageY - prevY}px`;
+            }
+            
+            // Escalar el tamaño basado en la posición del mouse
+            let newSize = Math.max(50, e.pageX / 5);
+            cuadro.style.width = `${newSize}px`;
+            cuadro.style.height = `${newSize}px`;
+        });
+        
+        document.addEventListener("mouseup", () => {
+            arrastrando = false;
+            cuadro.style.cursor = "grab";
+        });
+    </script>
+</body>
+</html>
